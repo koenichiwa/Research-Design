@@ -7,6 +7,8 @@
 
 unsigned long MapTests::halve(unsigned long in){ return in/2; }
 
+unsigned long MapTests::keyHalve(pair<unsigned long, unsigned long> in){ return in.first/2; }
+
 clock_t MapTests::vectorHalveTest(vector<unsigned long> col) {
     auto store = vector<unsigned long>(col.size());
     auto beginTime = clock();
@@ -36,9 +38,16 @@ clock_t MapTests::forwardListHalveTest(forward_list<unsigned long> col, int size
 }
 
 clock_t MapTests::arrayHalveTest(unsigned long *col, int size) {
-    return 0;
+    auto store = vector<unsigned long>(size);
+    auto beginTime = clock();
+    transform(col, col+size-1, store.begin(), MapTests::halve);
+    return clock()-beginTime;
 }
 
 clock_t MapTests::mapHalveTest(map<unsigned long, unsigned long> col) {
-    return 0;
+    auto store = vector<unsigned long>(col.size());
+    auto beginTime = clock();
+    transform(col.begin(), col.end(), store.begin(), MapTests::keyHalve);
+
+    return clock()-beginTime;
 }
