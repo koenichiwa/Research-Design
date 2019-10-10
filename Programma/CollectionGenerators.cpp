@@ -40,39 +40,32 @@ forward_list<unsigned long> CollectionGenerators::getRandomForwardList(int size)
 
 std::map<unsigned long, unsigned long> CollectionGenerators::getRandomMap(int size, bool sameValues) {
     map<unsigned long, unsigned long> map {};
-    vector<unsigned long> vec1, vec2;
-    int count = 0;
 
-    while(map.size() != size) {
-        count++;
-        vec1 = getRandomVector(size);
-        if (sameValues) {
-            vec2 = vec1;
+    cout << "# Generating set" << endl;
+    random_device randomDevice;
+    mt19937 mersenne_engine {randomDevice()};
+    uniform_int_distribution<unsigned long> dist {numeric_limits<unsigned int>::min(), numeric_limits<unsigned int>::max()};
+
+    while(map.size()<size){
+        if(sameValues){
+            unsigned long val = dist(mersenne_engine);
+            map[val] = val;
         } else {
-            vec2 = getRandomVector(size);
+            map[dist(mersenne_engine)] = dist(mersenne_engine);
         }
-
-        cout << "# Generating map from vector, try " << count << endl;
-        transform(
-                vec1.begin(),
-                vec1.end(),
-                vec2.begin(),
-                inserter(map, map.end()),
-                make_pair<unsigned long const &, unsigned long const &>
-        );
     }
-
     return map;
 }
 
 set<unsigned long> CollectionGenerators::getRandomSet(int size) {
-    set<unsigned long> set {};
-    int count = 0;
-    while(set.size()!=size) { // check if set didn't ommit double values
-        count++;
-        auto vec = getRandomVector(size);
-        cout << "# Generating set from vector, try " << count << endl;
-        set = { begin(vec), end(vec) };
-    }
-    return set;
+
+    cout << "# Generating set" << endl;
+    random_device randomDevice;
+    mt19937 mersenne_engine {randomDevice()};
+    uniform_int_distribution<unsigned long> dist {numeric_limits<unsigned int>::min(), numeric_limits<unsigned int>::max()};
+
+    auto res = set<unsigned long>();
+    while(res.size()<size)
+        res.insert(dist(mersenne_engine));
+    return res;
 }
