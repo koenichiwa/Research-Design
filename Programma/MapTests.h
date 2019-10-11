@@ -14,10 +14,10 @@
 using namespace std;
 
 class MapTests {
-public:
     static unsigned long halve(unsigned long in);
     static unsigned long keyHalve(pair<unsigned long, unsigned long> in);
 
+public:
     static clock_t vectorHalveTest(vector<unsigned long> col);
     static clock_t listHalveTest(list<unsigned long> col);
     static clock_t forwardListHalveTest(forward_list<unsigned long> col, int size);
