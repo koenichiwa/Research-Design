@@ -61,23 +61,24 @@ int main() {
 
     string json = "map: {\n";
 
-    auto stringVec = vector<string>(size*2);
-    transform(resMap.begin(), resMap.end(), stringVec.begin(), [](const std::pair<string, unsigned long>& p) -> string{
+    auto stringMap = vector<string>(size*2);
+    transform(resMap.begin(), resMap.end(), stringMap.begin(), [](const std::pair<string, unsigned long>& p){
         return p.first + " = " + to_string((long double)p.second/count) + "\n";
     });
-    
-    for(auto& s: stringVec){
-        json += s;
-    }
-    json += "}\nfold:{\n";
-    transform(resFold.begin(), resFold.end(), stringVec.begin()+size, [](const std::pair<string, unsigned long>& p){
+
+    auto stringFold = vector<string>(size*2);
+    transform(resFold.begin(), resFold.end(), stringFold.begin(), [](const std::pair<string, unsigned long>& p){
         return p.first + " = " + std::to_string((long double)p.second/count) + "\n";
     });
 
-    for(auto& s: stringVec){
+    for(auto& s: stringMap){
         json += s;
     }
 
+    json+= "}\nfold:{\n";
+    for(auto& s: stringFold){
+        json += s;
+    }
 
     json+="}";
     cout << json;
