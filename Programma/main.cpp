@@ -2,10 +2,12 @@
 #include "CollectionGenerators.h"
 #include "MapTests.h"
 #include "FoldTests.h"
+#include <string>
+
 
 int main() {
-    int size = 100000; //100_000
-    int count = 1000;
+    const int size = 100000; //100_000
+    const int count = 1000;
     map<string, unsigned long> resMap;
     resMap["vector"] = 0;
     resMap["list"] = 0;
@@ -57,15 +59,28 @@ int main() {
 //        resMap["map"]+= clock;
     }
 
-    for_each(resMap.begin(), resMap.end(), [](const std::pair<string, unsigned long>& p)
-    {
-        cout << "Map: " << p.first << ": " << ((long double)p.second/1000) << endl;
+    string json = "map: {\n";
+
+    auto stringVec = vector<string>(size*2);
+    transform(resMap.begin(), resMap.end(), stringVec.begin(), [](const std::pair<string, unsigned long>& p) -> string{
+        return p.first + " = " + to_string((long double)p.second/count) + "\n";
+    });
+    
+    for(auto& s: stringVec){
+        json += s;
+    }
+    json += "}\nfold:{\n";
+    transform(resFold.begin(), resFold.end(), stringVec.begin()+size, [](const std::pair<string, unsigned long>& p){
+        return p.first + " = " + std::to_string((long double)p.second/count) + "\n";
     });
 
-    for_each(resFold.begin(), resFold.end(), [](const std::pair<string, unsigned long>& p)
-    {
-        cout << "Fold: " << p.first << ": " << ((long double)p.second/1000) << endl;
-    });
+    for(auto& s: stringVec){
+        json += s;
+    }
+
+
+    json+="}";
+    cout << json;
     return 0;
 }
 
