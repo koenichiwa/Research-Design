@@ -3,6 +3,7 @@
 #include "MapTests.h"
 #include "FoldTests.h"
 #include <string>
+#include <fstream>
 
 
 int main() {
@@ -11,17 +12,17 @@ int main() {
     map<string, unsigned long> resMap;
     resMap["vector"] = 0;
     resMap["list"] = 0;
-    resMap["forward list"] = 0;
+    resMap["forwardList"] = 0;
     resMap["set"] = 0;
     resMap["array"] = 0;
-    resMap["map"] = 0;
+//    resMap["map"] = 0;
     map<string, unsigned long> resFold;
     resFold["vector"] = 0;
     resFold["list"] = 0;
-    resFold["forward list"] = 0;
+    resFold["forwardList"] = 0;
     resFold["set"] = 0;
     resFold["array"] = 0;
-    resFold["map"] = 0;
+//    resFold["map"] = 0;
     for(int i = 0; i<count; i++) {
         clock_t clock;
         auto vector = CollectionGenerators::getRandomVector(size);
@@ -44,9 +45,9 @@ int main() {
 
         auto forwardList = CollectionGenerators::getRandomForwardList(size);
         clock = MapTests::forwardListHalveTest(forwardList, size);
-        resMap["forward list"]+= clock;
+        resMap["forwardList"]+= clock;
         clock = FoldTests::forwardListFoldTest(forwardList);
-        resFold["forward list"]+=clock;
+        resFold["forwardList"]+=clock;
 
         auto array = CollectionGenerators::getRandomArray(size);
         clock = MapTests::arrayHalveTest(array, size);
@@ -59,29 +60,38 @@ int main() {
 //        resMap["map"]+= clock;
     }
 
-    string json = "map: {\n";
+    string json = "{\n"
+                  "\"map\": {\n";
 
     auto stringMap = vector<string>(size*2);
     transform(resMap.begin(), resMap.end(), stringMap.begin(), [](const std::pair<string, unsigned long>& p){
-        return p.first + " = " + to_string((long double)p.second/count) + "\n";
+        return "\t\"" + p.first + "\" : " + to_string((long double)p.second/count) + ",\n";
     });
 
     auto stringFold = vector<string>(size*2);
     transform(resFold.begin(), resFold.end(), stringFold.begin(), [](const std::pair<string, unsigned long>& p){
-        return p.first + " = " + std::to_string((long double)p.second/count) + "\n";
+        return "\t\""+p.first + "\" : " + std::to_string((long double)p.second/count) + ",\n";
     });
 
     for(auto& s: stringMap){
         json += s;
     }
 
-    json+= "}\nfold:{\n";
+    json = json.substr(0, json.size()-2)+"\n"; // remove extra comma
+
+    json+= "},\n\"fold\":{\n";
+
     for(auto& s: stringFold){
         json += s;
     }
+    json = json.substr(0, json.size()-2)+"\n"; // remove extra comma
 
-    json+="}";
-    cout << json;
+    json+="}\n}";
+
+    ofstream myfile;
+    myfile.open ("results.json");
+    myfile << json;
+    myfile.close();
     return 0;
 }
 
