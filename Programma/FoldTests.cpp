@@ -10,7 +10,7 @@ unsigned long FoldTests::keyMax(pair<unsigned long, unsigned long> acc, pair<uns
 
 clock_t FoldTests::vectorFoldTest(vector<unsigned long> col) {
     auto beginTime = clock();
-    reduce(col.begin(), col.end(), 0, FoldTests::max);
+    reduce(col.begin().base(), col.end().base(), 0, FoldTests::max);
     return clock()-beginTime;
 }
 

@@ -12,7 +12,7 @@ unsigned long MapTests::keyHalve(pair<unsigned long, unsigned long> in){ return 
 clock_t MapTests::vectorHalveTest(vector<unsigned long> col) {
     auto store = vector<unsigned long>(col.size());
     auto beginTime = clock();
-    transform(col.begin(), col.end(), store.begin(), MapTests::halve);
+    transform(col.begin().base(), col.end().base(), store.begin(), MapTests::halve);
     return clock()-beginTime;
 }
 
