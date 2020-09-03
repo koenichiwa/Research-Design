@@ -5,8 +5,8 @@
 #include "SortTests.h"
 #include "FindTests.h"
 #include <string>
-#include </usr/local/Cellar/jsoncpp/1.9.3/include/json/json.h>
 #include <fstream>
+#include <json/json.h>
 
 #define TEST_COUNT 100000
 
@@ -27,6 +27,7 @@ int main() {
         auto subjects = TestSubjects();
         {
             auto sortResults = SortTests::test(subjects);
+            std::cout << "## Adding sort test results" << std::endl;
             arrayResults.sortResults.push_back(sortResults.arrayResult);
             vectorResults.sortResults.push_back(sortResults.vectorResult);
             singlyListResults.sortResults.push_back(sortResults.singlyListResult);
@@ -34,6 +35,7 @@ int main() {
         }
         {
             auto foldResults = FoldTests::test(subjects);
+            std::cout << "## Adding fold test results" << std::endl;
             arrayResults.foldResults.push_back(foldResults.arrayResult);
             vectorResults.foldResults.push_back(foldResults.vectorResult);
             singlyListResults.foldResults.push_back(foldResults.singlyListResult);
@@ -41,6 +43,7 @@ int main() {
         }
         {
             auto transformResults = TransformTests::test(subjects);
+            std::cout << "## Adding transform test results" << std::endl;
             arrayResults.transformResults.push_back(transformResults.arrayResult);
             vectorResults.transformResults.push_back(transformResults.vectorResult);
             singlyListResults.transformResults.push_back(transformResults.singlyListResult);
@@ -48,6 +51,7 @@ int main() {
         }
         {
             auto findResults = FindTests::test(subjects);
+            std::cout << "## Adding find test results" << std::endl;
             arrayResults.findResults.push_back(findResults.arrayResult);
             vectorResults.findResults.push_back(findResults.vectorResult);
             singlyListResults.findResults.push_back(findResults.singlyListResult);
@@ -55,6 +59,7 @@ int main() {
         }
     }
 
+    std::cout << "## Saving data" << std::endl;
     Json::Value array(Json::arrayValue);
     Json::Value vector(Json::arrayValue);
     Json::Value singlyList(Json::arrayValue);
@@ -92,5 +97,6 @@ int main() {
     auto writer = std::unique_ptr<Json::StreamWriter>(Json::StreamWriterBuilder().newStreamWriter());
     writer->write(root, &file);
     file << std::endl;
+    std::cout << "### Thank you, come again!" << std::endl;
 }
 
