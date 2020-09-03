@@ -3,39 +3,39 @@
 //
 
 #include "FindTests.h"
+bool FindTests::pred(const long &a) {
+    return a == 1;
+}
 
-
-
-clock_t FindTests::vectorFindTest(vector<unsigned long> col) {
+clock_t FindTests::vectorTest(vector<long> col) {
     auto beginTime = clock();
     find_if(col.begin(), col.end(), pred);
     return clock()-beginTime;
 }
 
-bool FindTests::pred(const unsigned long &a, const unsigned long &b) {
-    return false;
+clock_t FindTests::doublyListTest(list<long> col) {
+    auto beginTime = clock();
+    find_if(begin(col), end(col), pred);
+    return clock()-beginTime;
 }
 
-clock_t FindTests::listFindTest(list<unsigned long> col) {
+clock_t FindTests::singlyListTest(forward_list<long> col) {
     auto beginTime = clock();
     find_if(col.begin(), col.end(), pred);
     return clock()-beginTime;
 }
 
-clock_t FindTests::forwardListFindTest(forward_list<unsigned long> col) {
-    auto beginTime = clock();
-    find_if(col.begin(), col.end(), pred);
-    return clock()-beginTime;
-}
-
-clock_t FindTests::setFindTest(set<unsigned long> col) {
-    auto beginTime = clock();
-    find_if(col.begin(), col.end(), pred);
-    return clock()-beginTime;
-}
-
-clock_t FindTests::arrayFindTest(unsigned long *begin, unsigned long *end) {
+clock_t FindTests::arrayTest(long *begin, long *end) {
     auto beginTime = clock();
     find_if(begin, end, pred);
     return clock()-beginTime;
 }
+TestResults FindTests::test(TestSubjects subjects) {
+    return TestResults (
+            arrayTest(subjects.array, subjects.array+SUBJECT_SIZE-1),
+            vectorTest(subjects.vector),
+            singlyListTest(subjects.singlyList),
+            doublyListTest(subjects.doublyList)
+    );
+}
+

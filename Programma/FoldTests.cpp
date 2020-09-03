@@ -4,42 +4,37 @@
 
 #include "FoldTests.h"
 
-unsigned long FoldTests::max(unsigned long acc, unsigned in){ return (acc+in)/2; }
+long FoldTests::max(long acc, unsigned in){ return (acc+in)/2; }
 
-unsigned long FoldTests::keyMax(pair<unsigned long, unsigned long> acc, pair<unsigned long, unsigned long> in){ return (acc.first+in.first)/2; }
-
-clock_t FoldTests::vectorFoldTest(vector<unsigned long> col) {
+clock_t FoldTests::vectorTest(vector<long> col) {
     auto beginTime = clock();
     reduce(col.begin().base(), col.end().base(), 0, FoldTests::max);
     return clock()-beginTime;
 }
 
-clock_t FoldTests::setFoldTest(set<unsigned long> col) {
+clock_t FoldTests::doublyListTest(list<long> col) {
     auto beginTime = clock();
     reduce(col.begin(), col.end(),0, FoldTests::max);
     return clock()-beginTime;
 }
 
-clock_t FoldTests::listFoldTest(list<unsigned long> col) {
+clock_t FoldTests::singlyListTest(forward_list<long> col) {
     auto beginTime = clock();
     reduce(col.begin(), col.end(),0, FoldTests::max);
     return clock()-beginTime;
 }
 
-clock_t FoldTests::forwardListFoldTest(forward_list<unsigned long> col) {
+clock_t FoldTests::arrayTest(long *begin, long *end) {
     auto beginTime = clock();
-    reduce(col.begin(), col.end(),0, FoldTests::max);
+    reduce(begin, end,0, FoldTests::max);
     return clock()-beginTime;
 }
 
-clock_t FoldTests::arrayFoldTest(unsigned long *col, int size) {
-    auto beginTime = clock();
-    reduce(col, col+size-1,0, FoldTests::max);
-    return clock()-beginTime;
+TestResults FoldTests::test(TestSubjects subjects) {
+    return TestResults (
+            arrayTest(subjects.array, subjects.array+SUBJECT_SIZE-1),
+            vectorTest(subjects.vector),
+            singlyListTest(subjects.singlyList),
+            doublyListTest(subjects.doublyList)
+    );
 }
-
-//clock_t FoldTests::mapFoldTest(map<unsigned long, unsigned long> col) {
-//    auto beginTime = clock();
-//    reduce(col.begin(), col.end(),0, FoldTests::keyMax);
-//    return clock()-beginTime;
-//}

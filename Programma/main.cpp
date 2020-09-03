@@ -1,149 +1,23 @@
 #include <iostream>
-#include "CollectionGenerators.h"
-#include "MapTests.h"
+#include "TestSubjects.h"
+#include "TransformTests.h"
 #include "FoldTests.h"
-//#include "sortTests.h"
+#include "SortTests.h"
 #include "FindTests.h"
 #include <string>
 #include <fstream>
 
+#define TEST_COUNT 100000
 
 int main() {
-    const int size = 100000; //100_000
-    const int count = 10000;
-    map<string, unsigned long> resMap;
-    resMap["vector"] = 0;
-    resMap["list"] = 0;
-    resMap["forwardList"] = 0;
-    resMap["set"] = 0;
-    resMap["array"] = 0;
-    map<string, unsigned long> resFold;
-    resFold["vector"] = 0;
-    resFold["list"] = 0;
-    resFold["forwardList"] = 0;
-    resFold["set"] = 0;
-    resFold["array"] = 0;
-
-//    map<string, unsigned long> resSort;
-//    resSort["vector"] = 0;
-//    resSort["list"] = 0;
-//    resSort["forwardList"] = 0;
-//    resSort["set"] = 0;
-//    resSort["array"] = 0;
-
-//    map<string, unsigned long> resFind;
-//    resFind["vector"] = 0;
-//    resFind["list"] = 0;
-//    resFind["forwardList"] = 0;
-//    resFind["set"] = 0;
-//    resFind["array"] = 0;
-    for(int i = 0; i<count; i++) {
-        clock_t clock;
-        auto vector = CollectionGenerators::getRandomVector(size);
-        clock = MapTests::vectorHalveTest(vector);
-        resMap["vector"]+=clock;
-        clock = FoldTests::vectorFoldTest(vector);
-        resFold["vector"]+=clock;
-//        clock = sortTests::vectorSortTest(vector);
-//        resSort["vector"] += clock;
-//        clock = FindTests::vectorFindTest(vector);
-//        resFind["vector"] += clock;
-
-        auto list = CollectionGenerators::getRandomList(size);
-        clock = MapTests::listHalveTest(list);
-        resMap["list"]+=clock;
-        clock = FoldTests::listFoldTest(list);
-        resFold["list"]+=clock;
-//        clock = sortTests::listSortTest(list);
-//        resSort["list"] += clock;
-//        clock = FindTests::listFindTest(list);
-//        resFind["list"] += clock;
-
-        auto set = CollectionGenerators::getRandomSet(size);
-        clock = MapTests::setHalveTest(set);
-        resMap["set"]+=clock;
-        clock = FoldTests::setFoldTest(set);
-        resFold["set"]+=clock;
-//        clock = sortTests::setSortTest(set);
-//        resSort["set"] += clock;
-//        clock = FindTests::setFindTest(set);
-//        resFind["set"] += clock;
-
-        auto forwardList = CollectionGenerators::getRandomForwardList(size);
-        clock = MapTests::forwardListHalveTest(forwardList, size);
-        resMap["forwardList"]+= clock;
-        clock = FoldTests::forwardListFoldTest(forwardList);
-        resFold["forwardList"]+=clock;
-//        clock = sortTests::forwardListSortTest(forwardList);
-//        resSort["forwardList"] += clock;
-//        clock = FindTests::forwardListFindTest(forwardList);
-//        resFind["forwardList"] += clock;
-
-        auto array = CollectionGenerators::getRandomArray(size);
-        clock = MapTests::arrayHalveTest(array, size);
-        resMap["array"]+= clock;
-        clock = FoldTests::arrayFoldTest(array, size);
-        resFold["array"]+=clock;
-//        clock = sortTests::arraySortTest(&array[0], &array[size-1]);
-//        resSort["array"] += clock;
-//        clock = FindTests::arrayFindTest(&array[0], &array[size-1]);
-//        resFind["array"] += clock;
+    for (int count = 0; count < TEST_COUNT; ++count) {
+        auto subjects = TestSubjects();
+        auto sortResults = SortTests::test(subjects);
+        auto foldResults = FoldTests::test(subjects);
+        auto transformTests = TransformTests::test(subjects);
+        auto findTests = FindTests::test(subjects);
     }
 
-    string json = "{\n"
-                  "\"map\": {\n";
 
-    auto stringMap = vector<string>(size*2);
-    transform(resMap.begin(), resMap.end(), stringMap.begin(), [](const std::pair<string, unsigned long>& p){
-        return "\t\"" + p.first + "\" : " + to_string((long double)p.second/count) + ",\n";
-    });
-
-    auto stringFold = vector<string>(size*2);
-    transform(resFold.begin(), resFold.end(), stringFold.begin(), [](const std::pair<string, unsigned long>& p){
-        return "\t\""+p.first + "\" : " + std::to_string((long double)p.second/count) + ",\n";
-    });
-
-//    auto stringSort = vector<string>(size*2);
-//    transform(resSort.begin(), resSort.end(), stringSort.begin(), [](const std::pair<string, unsigned long>& p){
-//        return "\t\""+p.first + "\" : " + std::to_string((long double)p.second/count) + ",\n";
-//    });
-
-//    auto stringFind = vector<string>(size*2);
-//    transform(resFind.begin(), resFind.end(), stringFind.begin(), [](const std::pair<string, unsigned long>& p){
-//        return "\t\""+p.first + "\" : " + std::to_string((long double)p.second/count) + ",\n";
-//    });
-
-    for(auto& s: stringMap){
-        json += s;
-    }
-
-    json = json.substr(0, json.size()-2)+"\n"; // remove extra comma
-
-    json+= "},\n\"fold\":{\n";
-
-    for(auto& s: stringFold){
-        json += s;
-    }
-    json = json.substr(0, json.size()-2)+"\n"; // remove extra comma
-
-//    json+= "},\n\"sort\":{\n";
-//
-//    for(auto& s: stringSort){
-//        json += s;
-//    }
-//    json = json.substr(0, json.size()-2)+"\n"; // remove extra comma
-
-//    for(auto& s: stringFind){
-//        json += s;
-//    }
-//    json = json.substr(0, json.size()-2)+"\n"; // remove extra comma
-    
-    json+="}\n}";
-
-    ofstream myfile;
-    myfile.open ("results.json");
-    myfile << json;
-    myfile.close();
-    return 0;
 }
 

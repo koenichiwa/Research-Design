@@ -10,17 +10,18 @@
 #include <forward_list>
 #include <set>
 #include <ctime>
+#include "TestResults.h"
+#include "TestSubjects.h"
 
 using namespace std;
 class FindTests {
-    static bool pred(const unsigned long &a, const unsigned long &b);
-
+    static bool pred(const long &a);
+    static clock_t vectorTest(vector<long> col);
+    static clock_t doublyListTest(list<long> col);
+    static clock_t singlyListTest(forward_list<long> col);
+    static clock_t arrayTest(long* begin, long*  end);
 public:
-    static clock_t vectorFindTest(vector<unsigned long> col);
-    static clock_t listFindTest(list<unsigned long> col);
-    static clock_t forwardListFindTest(forward_list<unsigned long> col);
-    static clock_t setFindTest(set<unsigned long> col);
-    static clock_t arrayFindTest(unsigned long* begin, unsigned long*  end);
+    static TestResults test(TestSubjects subjects);
 };
 
 
