@@ -8,9 +8,11 @@
 #include <fstream>
 #include <utility>
 #include <json/json.h>
+#include <sys/resource.h>
+#include <unistd.h>
 
 #define TEST_COUNT 100
-#define SAMPLE_COUNT 100
+#define SAMPLE_COUNT 1000
 
 struct results {
     std::vector<clock_t> sortResults;
@@ -113,6 +115,8 @@ int main() {
     means singlyListMeans;
     means doublyListMeans;
 
+    setpriority(PRIO_PROCESS, getpid(), INT32_MIN);
+
     for (int sampleN = 0; sampleN < SAMPLE_COUNT; ++sampleN) {
         std::cout << "### Sample count:" << sampleN << std::endl;
         results arrayResults;
@@ -121,6 +125,7 @@ int main() {
         results doublyListResults;
         for (int count = 0; count < TEST_COUNT; ++count) {
             std::cout << "## Test count:" << count << std::endl;
+
             auto subjects = TestSubjects();
             {
                 auto sortResults = SortTests::test(subjects);

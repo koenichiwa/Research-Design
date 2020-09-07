@@ -13,7 +13,7 @@
 #include <set>
 #include <iostream>
 
-#define SUBJECT_SIZE 100000
+#define SUBJECT_SIZE 10000
 
 struct TestSubjects {
     std::vector<long> vector;
