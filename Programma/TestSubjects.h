@@ -9,9 +9,6 @@
 #include <algorithm>
 #include <list>
 #include <forward_list>
-#include <map>
-#include <set>
-#include <iostream>
 
 #define SUBJECT_SIZE 10000
 
@@ -31,7 +28,7 @@ struct TestSubjects {
 
 private:
     static std::vector<long> getRandomVector(unsigned int size);
-    void fillArray(std::vector<long> vector);
+    void fillArray(const std::vector<long> &vector);
     static std::list<long> fillList(std::vector<long> vector); //doubly linked
     static std::forward_list<long> fillForwardList(std::vector<long> vector); // singly linked
 };

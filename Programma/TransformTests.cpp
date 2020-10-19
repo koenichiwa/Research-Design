@@ -2,7 +2,6 @@
 // Created by Koen van Wel on 10/10/2019.
 //
 
-#include <iostream>
 #include "TransformTests.h"
 
 long TransformTests::halve(long in){ return in / 2; }

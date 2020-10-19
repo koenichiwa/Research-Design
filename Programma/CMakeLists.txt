@@ -13,8 +13,6 @@ FetchContent_GetProperties(jsoncpp)
 if (NOT jsoncpp_POPULATED)
     FetchContent_Populate(jsoncpp)
     add_subdirectory(${jsoncpp_SOURCE_DIR} ${jsoncpp_BINARY_DIR})
-    message(${jsoncpp_SOURCE_DIR})
-    message(${jsoncpp_BINARY_DIR})
 endif ()
 
 FetchContent_MakeAvailable(jsoncpp)

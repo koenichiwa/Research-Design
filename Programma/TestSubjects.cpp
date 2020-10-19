@@ -3,6 +3,7 @@
 //
 
 #include "TestSubjects.h"
+#include <iostream>
 
 std::vector<long> TestSubjects::getRandomVector(unsigned int size) {
     std::cout << "# Generating vector" << std::endl;
@@ -18,7 +19,7 @@ std::vector<long> TestSubjects::getRandomVector(unsigned int size) {
     return vec;
 }
 
-void TestSubjects::fillArray(std::vector<long> vec) {
+void TestSubjects::fillArray(const std::vector<long> &vec) {
     std::cout << "# Generating array from vector" << std::endl;
     auto size = vec.size();
     for(int i = 0; i<size; i++)

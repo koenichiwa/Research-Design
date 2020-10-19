@@ -6,10 +6,8 @@
 #define PROGRAMMA_TRANSFORMTESTS_H
 
 #include <vector>
-#include <map>
 #include <list>
 #include <forward_list>
-#include <set>
 #include <ctime>
 #include "TestResults.h"
 #include "TestSubjects.h"

@@ -40,9 +40,17 @@ std::vector<double> getAvg(results results) {
     return res;
 }
 
-void saveData(means arrayMeans, means vectorMeans, means singlyListMeans, means doublyListMeans){
+void saveData(
+        vector<double> calibrateMeans,
+        means arrayMeans,
+        means vectorMeans,
+        means singlyListMeans,
+        means doublyListMeans
+){
     std::cout << "## Saving data" << std::endl;
-    
+
+    auto calibrate = Json::Value(Json::arrayValue);
+
     auto array = Json::Value();
     array["sort"] = Json::Value(Json::arrayValue);
     array["fold"] = Json::Value(Json::arrayValue);
@@ -68,6 +76,8 @@ void saveData(means arrayMeans, means vectorMeans, means singlyListMeans, means 
     doublyList["find"] = Json::Value(Json::arrayValue);
 
     for (int i = 0; i < TEST_COUNT; i++) {
+        calibrate.append(calibrateMeans[i]);
+
         array["sort"].append(Json::Value(arrayMeans.sortMeans[i]));
         array["fold"].append(Json::Value(arrayMeans.foldMeans[i]));
         array["transform"].append(Json::Value(arrayMeans.transformMeans[i]));
@@ -90,12 +100,13 @@ void saveData(means arrayMeans, means vectorMeans, means singlyListMeans, means 
     }
 
     Json::Value root;
+    root["calibrate"] = calibrate;
     root["array"] = array;
     root["vector"] = vector;
     root["singlyList"] =  singlyList;
     root["doublyList"] = doublyList;
 
-    std::ofstream file("results.json");
+    std::ofstream file("results_cali.json");
     auto writer = std::unique_ptr<Json::StreamWriter>(Json::StreamWriterBuilder().newStreamWriter());
     writer->write(root, &file);
     file.close();
@@ -114,6 +125,7 @@ int main() {
     means vectorMeans;
     means singlyListMeans;
     means doublyListMeans;
+    vector<double> calibrateMeans;
 
     setpriority(PRIO_PROCESS, getpid(), INT32_MIN);
 
@@ -123,8 +135,12 @@ int main() {
         results vectorResults;
         results singlyListResults;
         results doublyListResults;
+        std::vector<clock_t> calibrateResults;
+
         for (int count = 0; count < TEST_COUNT; ++count) {
             std::cout << "## Test count:" << count << std::endl;
+
+            auto beginTime = clock();
 
             auto subjects = TestSubjects();
             {
@@ -159,15 +175,23 @@ int main() {
                 singlyListResults.findResults.push_back(findResults.singlyListResult);
                 doublyListResults.findResults.push_back(findResults.doublyListResult);
             }
-        }
 
+            calibrateResults.push_back(clock()-beginTime);
+        }
+        calibrateMeans.push_back((
+                (double) std::accumulate(
+                    calibrateResults.begin(),
+                    calibrateResults.end(),
+                    0UL)
+            ) / calibrateResults.size()
+        );
         addMeans(arrayResults, &arrayMeans);
         addMeans(vectorResults, &vectorMeans);
         addMeans(singlyListResults, &singlyListMeans);
         addMeans(doublyListResults, &doublyListMeans);
     }
 
-    saveData(arrayMeans, vectorMeans, singlyListMeans, doublyListMeans);
+    saveData(calibrateMeans, arrayMeans, vectorMeans, singlyListMeans, doublyListMeans);
 
     std::cout << "### Thank you, come again!" << std::endl;
 }

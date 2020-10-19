@@ -9,7 +9,6 @@
 #include <vector>
 #include <list>
 #include <forward_list>
-#include <set>
 #include <ctime>
 #include "TestResults.h"
 #include "TestSubjects.h"
